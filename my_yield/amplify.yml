@@ -1,1 +1,23 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        # clean install using legacy-peers flag
+        - npm ci --legacy-peer-deps
+    build:
+      commands:
+        # skip CRA preflight eslint check
+        - echo SKIP_PREFLIGHT_CHECK=true > .env
+        # enable legacy OpenSSL during build
+        - export NODE_OPTIONS=--openssl-legacy-provider || set NODE_OPTIONS=--openssl-legacy-provider
+        - npm run build
+  artifacts:
+    # where your production-ready files live
+    baseDirectory: build
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
 
